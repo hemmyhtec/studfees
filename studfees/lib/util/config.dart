@@ -1,7 +1,8 @@
 import 'package:cloudinary_public/cloudinary_public.dart';
 import 'package:flutter/material.dart';
 
-String url = 'http://192.168.188.130:3000';
+// String url = 'http://192.168.188.130:3000';
+String url = 'https://studfees-server.onrender.com';
 
 class Config {
   // static const appIcon = 'assets/images/logo.png';
