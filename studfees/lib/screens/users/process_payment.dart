@@ -118,7 +118,7 @@ class _ProcessPaymentState extends State<ProcessPayment> {
         referenceId: response.reference,
       );
 
-      http.Response apiResponse = await http.post(
+      await http.post(
         Uri.parse('$url/paymentsProcess'),
         body: payment.toJson(),
         headers: <String, String>{

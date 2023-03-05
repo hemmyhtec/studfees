@@ -44,8 +44,7 @@ class AlertBox extends StatelessWidget {
                   alertText,
                   textAlign: TextAlign.center,
                   style: const TextStyle(
-                    fontWeight: FontWeight.bold,
-                    fontSize: 20.0,
+                    fontSize: 15.0,
                   ),
                 ),
               ),

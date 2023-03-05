@@ -5,7 +5,6 @@ import 'dart:io';
 
 import 'package:cloudinary_public/cloudinary_public.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_paystack/flutter_paystack.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:studfees/components/auth_screen.dart';
@@ -13,12 +12,9 @@ import 'package:studfees/models/user_model.dart';
 import 'package:http/http.dart' as http;
 import 'package:studfees/provider/user_provider.dart';
 import 'package:studfees/screens/auth/login.dart';
-import 'package:studfees/screens/users/profile.dart';
 import 'package:studfees/util/config.dart';
 import 'package:studfees/util/handle_errors.dart';
 import 'package:studfees/util/navigator.dart';
-
-import '../models/process_payment_model.dart';
 
 class AuthServiceProvider {
   void registerUser({
@@ -206,32 +202,33 @@ class AuthServiceProvider {
     }
   }
 
-  // void makePayment(
-  //     {required BuildContext context,
-  //     required String paymentName,
-  //     required int levyAmount}) async {
-  //   final userProvider = Provider.of<UserProvider>(context, listen: false);
-  //   try {
-  //     Payment payment = Payment(
-  //       levyName: paymentName,
-  //       feeAmount: levyAmount,
-  //     );
-
-  //     String publicKey = 'pk_test_ae8c3bb88d24ffa2f72c0eda65d59ee8c8a84f0b';
-
-  //     final plugin = PaystackPlugin();
-
-  //     http.Response response = await http.post(
-  //       Uri.parse('$url/paymentsProcess'),
-  //       body: payment.toJson(),
-  //       headers: <String, String>{
-  //         HttpHeaders.contentTypeHeader: 'application/json',
-  //         'x-auth-token': userProvider.user.token,
-  //       },
-  //     );
-  //     print(response.body);
-  //   } catch (e) {
-  //     print(e.toString());
-  //   }
-  // }
+  void forgetPassword({
+    required BuildContext context,
+    required String email,
+  }) async {
+    try {
+      http.Response response =
+          await http.post(Uri.parse('$url/resetPasswordToken'),
+              body: jsonEncode(
+                {
+                  'email': email,
+                },
+              ),
+              headers: <String, String>{
+            'Content-Type': 'application/json; charset=utf-8',
+          });
+      httpErrorHandle(
+        response: response,
+        context: context,
+        onSuccess: () async {
+          nextScreenReplace(context, const LoginScreen());
+        },
+        onFailed: () {
+          Navigator.pop(context);
+        },
+      );
+    } catch (e) {
+      debugPrint(e.toString());
+    }
+  }
 }

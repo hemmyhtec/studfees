@@ -1,42 +1,40 @@
+import 'package:dropdown_button2/dropdown_button2.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:studfees/components/custom_textfield.dart';
-import 'package:studfees/screens/auth/forgetpassword.dart';
-import 'package:studfees/screens/auth/register.dart';
+import 'package:studfees/screens/auth/login.dart';
 import 'package:studfees/services/auth_service.dart';
 import 'package:studfees/util/navigator.dart';
-
+import '../../components/custom_textfield.dart';
 import '../../util/config.dart';
+import 'package:validators/validators.dart' as validator;
 
-class LoginScreen extends StatefulWidget {
-  const LoginScreen({super.key});
+class ForgetPassword extends StatefulWidget {
+  const ForgetPassword({super.key});
 
   @override
-  State<LoginScreen> createState() => _LoginScreenState();
+  State<ForgetPassword> createState() => _ForgetPasswordState();
 }
 
-class _LoginScreenState extends State<LoginScreen> {
+class _ForgetPasswordState extends State<ForgetPassword> {
   AuthServiceProvider authServiceProvider = AuthServiceProvider();
-
-  final GlobalKey<FormState> _globalKey = GlobalKey<FormState>();
-
-  TextEditingController admissionNumber = TextEditingController();
-  TextEditingController passwordController = TextEditingController();
 
   bool isLoading = false;
 
+  final GlobalKey<FormState> _globalKey = GlobalKey<FormState>();
+
+  TextEditingController emailController = TextEditingController();
+
   @override
   void dispose() {
-    admissionNumber.dispose();
-    passwordController.dispose();
+    emailController.dispose();
+
     super.dispose();
   }
 
-  void signUser() {
-    authServiceProvider.signUserIn(
+  void registerUser() {
+    authServiceProvider.forgetPassword(
       context: context,
-      admissionNumber: admissionNumber.text.trim(),
-      password: passwordController.text.trim(),
+      email: emailController.text.trim(),
     );
   }
 
@@ -65,7 +63,7 @@ class _LoginScreenState extends State<LoginScreen> {
                   const SizedBox(height: 50),
                   ListTile(
                     title: Text(
-                      'Hello Again! 👋',
+                      'Forget Password!🤥',
                       textAlign: TextAlign.center,
                       style: GoogleFonts.inter(
                         fontSize: 50.0,
@@ -73,65 +71,28 @@ class _LoginScreenState extends State<LoginScreen> {
                       ),
                     ),
                     subtitle: Text(
-                      'To access your Account and Manage your Levy Payments.',
+                      'Enter your email address to receive a reset link.',
                       textAlign: TextAlign.center,
                       style: GoogleFonts.inter(
                         fontSize: 20.0,
                       ),
                     ),
                   ),
-                  const SizedBox(height: 50),
-                  const Text(
-                    'Contiune with your Admission No and Password.',
-                    style: TextStyle(
-                      fontWeight: FontWeight.w500,
-                      fontSize: 20,
-                    ),
-                  ),
                   const SizedBox(height: 20),
                   CustomTextField(
-                    editingController: admissionNumber,
-                    textInputType: TextInputType.number,
-                    labelText: 'Admission Number',
+                    editingController: emailController,
+                    textInputType: TextInputType.emailAddress,
+                    labelText: 'Email Address',
                     textInputAction: TextInputAction.next,
                     validator: (value) {
-                      if (value.isEmpty) {
-                        return 'Just dey play!';
+                      if (!validator.isEmail(value)) {
+                        return 'Just dey play! enter a valid email';
+                      } else if (value.toString().isEmpty) {
+                        return 'Dey play! Empty value not allowed';
                       }
                       return null;
                     },
                     isPassword: false,
-                  ),
-                  const SizedBox(height: 20),
-                  CustomTextField(
-                    editingController: passwordController,
-                    textInputType: TextInputType.name,
-                    labelText: 'Password',
-                    textInputAction: TextInputAction.done,
-                    validator: (value) {
-                      if (value.isEmpty) {
-                        return 'Just dey play!';
-                      }
-                      return null;
-                    },
-                    isPassword: true,
-                  ),
-                  const SizedBox(height: 20),
-                  Column(
-                    children: [
-                      GestureDetector(
-                        onTap: () {
-                          nextScreen(context, const ForgetPassword());
-                        },
-                        child: const Text(
-                          'Forget Password?',
-                          style: TextStyle(
-                            fontWeight: FontWeight.bold,
-                            color: Config.backgroundColor,
-                          ),
-                        ),
-                      )
-                    ],
                   ),
                   const SizedBox(height: 20),
                   ElevatedButton(
@@ -140,9 +101,9 @@ class _LoginScreenState extends State<LoginScreen> {
                         setState(() {
                           isLoading = true;
                         });
-                        Future.delayed(const Duration(seconds: 3), () {
+                        Future.delayed(const Duration(seconds: 5), () {
                           setState(() {
-                            signUser();
+                            registerUser();
                             isLoading = false;
                           });
                         });
@@ -175,16 +136,16 @@ class _LoginScreenState extends State<LoginScreen> {
                         : Row(
                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
                             children: const [
-                              Text('Login'),
+                              Text('Reset Password'),
                               Icon(Icons.send),
                             ],
                           ),
                   ),
-                  const SizedBox(height: 40),
+                  const SizedBox(height: 20),
                   Row(
                     children: [
                       const Text(
-                        'New User?',
+                        'Existing User?',
                         style: TextStyle(
                           fontSize: 18,
                           fontWeight: FontWeight.w400,
@@ -193,10 +154,10 @@ class _LoginScreenState extends State<LoginScreen> {
                       TextButton(
                         style: TextButton.styleFrom(),
                         onPressed: () {
-                          nextScreen(context, const RegisterScreen());
+                          nextScreen(context, const LoginScreen());
                         },
                         child: const Text(
-                          'Register',
+                          'Login',
                           style: TextStyle(
                             fontSize: 20,
                             fontWeight: FontWeight.bold,

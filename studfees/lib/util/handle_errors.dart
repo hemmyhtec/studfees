@@ -75,6 +75,6 @@ void httpErrorHandle({
       );
       break;
     default:
-      showSnackBar(context, response.body);
+      showSnackBar(context, jsonDecode(response.body)['msg']);
   }
 }

@@ -36,8 +36,7 @@ class _CustomTextFieldState extends State<CustomTextField> {
       validator: widget.validator,
       style: GoogleFonts.inter(
         color: Colors.black,
-        fontSize: 25,
-        fontWeight: FontWeight.w500,
+        fontSize: 20,
       ),
       textInputAction: widget.textInputAction,
       controller: widget.editingController,
